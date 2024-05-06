@@ -29,5 +29,5 @@ CREATE TABLE ProductTag (
     id INTEGER NOT NULL SERIAL PRIMARY KEY AUTO_INCREMENT,
     product_id INTEGER REFERENCES product(id),
     tag_id INTEGER REFERENCES tag(id)
-)
+);
 
