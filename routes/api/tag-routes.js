@@ -28,20 +28,28 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
+  // updates a tag's name by its `id` value
+  Tag.update({
+    where: {
+      //Gets the tag based on the id given in the request parameters
+      id: req.params.id,
+    },
+  },
+    {
+    })
 });
 
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
-  Tag.destroy ({
-    where :{
-    id: req.params.id,
+  // deletes one tag by its `id` value
+  Tag.destroy({
+    where: {
+      id: req.params.id,
     },
   })
-  .then((deletedTag) => {
-    res.json(deletedTag);
-  })
- .catch((err) => res.json(err));
+    .then((deletedTag) => {
+      res.json(deletedTag);
+    })
+    .catch((err) => res.json(err));
 });
 
 module.exports = router;
