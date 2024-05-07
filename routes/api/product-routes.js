@@ -4,28 +4,49 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // The `/api/products` endpoint
 
 // get all products
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // finds all products including its associated Category and Tag data
-  Product.findAll().then((Category, Tag) => {
-    res.json(Category, Tag);
-  });
+  try {
+    const productData = await Product.findAll({
+      include: [{model: Category}, {model: Tag}, {model: ProductTag}],
+    });
+    res.status(200).json(productData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // get one product
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // finds one product by its `id` value including its associated Category and Tag data
-  Product.findOne({
-    where: {
-      id: req.params.id
-    },
+  try {
+    const productData = await Category.findByPk(req.params.id, {
+      include: [{model: Category}, {model: Tag}, {model: ProductTag}],
+    });
+
+    // displays if no product data is found
+    if (!productData) {
+      res.status(404).json({ message: "No product found with that id!" });
+      return;
+    }
+    //comes back with product data results
+    res.status(200).json(productData)
+  } catch (err) {
+    //comes back if server side errors
+    res.status.status(500).json(err);
   }
-  ).then((Category, Tag) => {
-    res.json(Category, Tag);
-  })
 });
 
-// create new product
-router.post('/', (req, res) => {
+// creates new product
+router.post('/', async (req, res) => {
+  try {
+    const productData = await Product.create({
+      id: req.body.id,
+    });
+    res.status(200).json(productData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -58,7 +79,7 @@ router.post('/', (req, res) => {
 
 // update product
 router.put('/:id', (req, res) => {
-  // update product data
+  // updates product data
   Product.update(req.body, {
     where: {
       id: req.params.id,
