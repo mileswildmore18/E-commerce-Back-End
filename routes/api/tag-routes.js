@@ -38,9 +38,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   // create a new tag
   try {
-    const tagData = await Tag.create({
-      id: req.body.id,
-    });
+    const tagData = await Tag.create(req.body);
     res.status(200).json(tagData);
   } catch (err) {
     res.status(400).json(err);
@@ -49,7 +47,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   // updates a tag's name by its `id` value
-  const tagData = await Tag.update({
+  const tagData = await Tag.update(req.body,{
     where: {
       //Gets the tag based on the id given in the request parameters
       id: req.params.id,
